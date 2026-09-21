@@ -1,0 +1,108 @@
+name: Update SamLoader Submodule
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-samloader-fifteen
+  cancel-in-progress: false
+
+jobs:
+  update-samloader:
+    name: Update external/samloader
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout fifteen branch
+        uses: actions/checkout@v4
+        with:
+          ref: fifteen
+          fetch-depth: 0
+          submodules: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Initialize SamLoader submodule
+        run: |
+          set -euo pipefail
+
+          git submodule update --init external/samloader
+
+      - name: Update SamLoader to pinned commit
+        working-directory: external/samloader
+        run: |
+          set -euo pipefail
+
+          SAMLOADER_COMMIT="69ce07a4c2eb7e1d96ca801d6359989c93a00adb"
+
+          git fetch --no-tags origin "$SAMLOADER_COMMIT"
+          git checkout --detach "$SAMLOADER_COMMIT"
+
+          echo "SamLoader is now pinned to:"
+          git rev-parse HEAD
+
+      - name: Verify SamLoader commit
+        run: |
+          set -euo pipefail
+
+          EXPECTED="69ce07a4c2eb7e1d96ca801d6359989c93a00adb"
+          ACTUAL="$(git -C external/samloader rev-parse HEAD)"
+
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "::error::Unexpected SamLoader commit."
+            echo "Expected: $EXPECTED"
+            echo "Actual:   $ACTUAL"
+            exit 1
+          fi
+
+          echo "Verified SamLoader commit: $ACTUAL"
+
+      - name: Check for changes
+        id: changes
+        run: |
+          set -euo pipefail
+
+          git add external/samloader
+
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "SamLoader is already pinned to the requested commit."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+
+            echo "Submodule change:"
+            git diff --cached --submodule=short -- external/samloader
+          fi
+
+      - name: Commit submodule update
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+
+          git commit \
+            -m "Update samloader submodule" \
+            -m "Pin external/samloader to 69ce07a4c2eb7e1d96ca801d6359989c93a00adb."
+
+      - name: Push changes to fifteen
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+
+          git push origin HEAD:fifteen
+
+      - name: Summary
+        run: |
+          echo "### SamLoader update" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Branch: \`fifteen\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Submodule: \`external/samloader\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Commit: \`69ce07a4c2eb7e1d96ca801d6359989c93a00adb\`" >> "$GITHUB_STEP_SUMMARY"
