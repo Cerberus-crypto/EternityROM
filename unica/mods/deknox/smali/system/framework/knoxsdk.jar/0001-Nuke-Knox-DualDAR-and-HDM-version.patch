@@ -10,20 +10,18 @@ Signed-off-by: ExtremeXT <75576145+ExtremeXT@users.noreply.github.com>
  2 files changed, 3 insertions(+), 37 deletions(-)
 
 diff --git a/smali/com/samsung/android/knox/ddar/DualDARPolicy.smali b/smali/com/samsung/android/knox/ddar/DualDARPolicy.smali
-index 059731524c..e014bafb38 100644
 --- a/smali/com/samsung/android/knox/ddar/DualDARPolicy.smali
 +++ b/smali/com/samsung/android/knox/ddar/DualDARPolicy.smali
-@@ -96,7 +96,7 @@
+@@ -90,7 +90,7 @@
  .method public static greylist getDualDARVersion()Ljava/lang/String;
      .locals 1
  
--    const-string v0, "1.7.0"
+-    const-string v0, "1.8.0"
 +    const/4 v0, 0x0
  
      return-object v0
  .end method
 diff --git a/smali/com/samsung/android/knox/hdm/HdmManager.smali b/smali/com/samsung/android/knox/hdm/HdmManager.smali
-index 11647d170d..ab5fdf0835 100644
 --- a/smali/com/samsung/android/knox/hdm/HdmManager.smali
 +++ b/smali/com/samsung/android/knox/hdm/HdmManager.smali
 @@ -35,7 +35,7 @@
@@ -35,7 +33,7 @@ index 11647d170d..ab5fdf0835 100644
  
      sget-object v0, Lcom/samsung/android/knox/hdm/HdmManager;->TAG:Ljava/lang/String;
  
-@@ -43,42 +43,8 @@
+@@ -43,40 +43,7 @@
  
      invoke-static {v0, v1}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
  
@@ -69,16 +67,11 @@ index 11647d170d..ab5fdf0835 100644
 -
 -    move-result-object v0
 -
--    goto :goto_0
+-    return-object v0
 -
 -    :cond_0
 -    const-string v0, "2.0 - 95"
 +    const/4 v0, 0x0
  
--    :goto_0
      return-object v0
  .end method
- 
--- 
-2.43.0
-
