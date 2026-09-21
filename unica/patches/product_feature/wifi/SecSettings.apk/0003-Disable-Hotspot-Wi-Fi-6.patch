@@ -4,22 +4,41 @@ Date: Mon, 28 Apr 2025 00:40:22 +0300
 Subject: [PATCH] Disable Hotspot Wi-Fi 6
 
 ---
- .../configure/WifiApConfigureSupportWifi6Controller.smali       | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../WifiApConfigureSupportWifi6Controller.smali     | 21 +--------------------
+ 1 file changed, 1 insertion(+), 20 deletions(-)
 
-diff --git a/smali_classes3/com/samsung/android/settings/wifi/mobileap/configure/WifiApConfigureSupportWifi6Controller.smali b/smali_classes3/com/samsung/android/settings/wifi/mobileap/configure/WifiApConfigureSupportWifi6Controller.smali
-index 7151c6185..eec27ca5c 100644
---- a/smali_classes3/com/samsung/android/settings/wifi/mobileap/configure/WifiApConfigureSupportWifi6Controller.smali
-+++ b/smali_classes3/com/samsung/android/settings/wifi/mobileap/configure/WifiApConfigureSupportWifi6Controller.smali
-@@ -110,7 +110,7 @@
- .method public getAvailabilityStatus()I
-     .locals 0
+diff --git a/smali_classes2/com/samsung/android/settings/wifi/mobileap/configure/WifiApConfigureSupportWifi6Controller.smali b/smali_classes2/com/samsung/android/settings/wifi/mobileap/configure/WifiApConfigureSupportWifi6Controller.smali
+index fc0b80e5..5336cd9d 100644
+--- a/smali_classes2/com/samsung/android/settings/wifi/mobileap/configure/WifiApConfigureSupportWifi6Controller.smali
++++ b/smali_classes2/com/samsung/android/settings/wifi/mobileap/configure/WifiApConfigureSupportWifi6Controller.smali
+@@ -115,27 +115,8 @@
+ .end method
  
+ .method public getAvailabilityStatus()I
+-    .locals 1
+-
+-    iget-object p0, p0, Lcom/samsung/android/settings/wifi/mobileap/configure/WifiApConfigureSupportWifi6Controller;->mContext:Landroid/content/Context;
+-
+-    invoke-static {p0}, Lcom/samsung/android/settings/wifi/mobileap/utils/WifiApFrameworkUtils;->getSemWifiManager(Landroid/content/Context;)Lcom/samsung/android/wifi/SemWifiManager;
+-
+-    move-result-object p0
+-
+-    const/4 v0, 0x1
+-
+-    invoke-virtual {p0, v0}, Lcom/samsung/android/wifi/SemWifiManager;->isThisSoftApFeatureSupported(I)Z
+-
+-    move-result p0
+-
+-    if-eqz p0, :cond_0
+-
 -    const/4 p0, 0x0
-+    const/4 p0, 0x3
+-
+-    return p0
++    .locals 0
+ 
+-    :cond_0
+     const/4 p0, 0x3
  
      return p0
- .end method
 -- 
 2.45.2
-
