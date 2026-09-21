@@ -166,6 +166,24 @@ DECODE()
             # - Use .locals directive instead of the .registers one
             # - Use a sequential numbering scheme for labels
             EVAL "baksmali d -a \"$DEX_API_LEVEL\" --ac false --di false -j \"$THREAD_COUNT\" -l -o \"$OUTPUT_PATH/$SMALI_OUT\" --sl \"$f\"" &
+
+            # Samsung containerized jars (e.g. services.jar) pack extra dex files
+            # into a single zip entry as "classes.dex/2". Those sub-dex files are
+            # only addressable through the container, so enumerate and disassemble
+            # them from $INPUT_FILE; the plain dex extracted into $OUTPUT_PATH
+            # cannot address them.
+            if [[ "$f" == *"classes.dex" ]]; then
+                for DEX_ENTRY in $(baksmali list dex "$INPUT_FILE" 2> /dev/null); do
+                    case "$DEX_ENTRY" in
+                        classes.dex/[0-9]*)
+                            N="${DEX_ENTRY##*/}"
+                            if [ "$N" -gt 1 ]; then
+                                EVAL "baksmali d -a \"$DEX_API_LEVEL\" --ac false --di false -j \"$THREAD_COUNT\" -l -o \"$OUTPUT_PATH/smali_classes$N\" --sl \"$INPUT_FILE/$DEX_ENTRY\"" &
+                            fi
+                            ;;
+                    esac
+                done
+            fi
         done < <(find "$OUTPUT_PATH" -maxdepth 1 -type f -name "*.dex")
 
         # shellcheck disable=SC2046
@@ -188,26 +206,30 @@ DEX_TO_API()
     local DEX_FILE="$1"
 
     local DEX_VERSION
-    DEX_VERSION="$(READ_BYTES_AT "$DEX_FILE" "6" "1")"
+    # The DEX magic is "dex\n" + three ASCII version digits (035=Android M,
+    # 039=Android 10, 041=Android 16) + NUL. Read all three digits: reading
+    # only the last one cannot tell 040 (Android 14) from 041 and reports an
+    # unknown version.
+    DEX_VERSION="$(dd if="$DEX_FILE" bs=1 skip=4 count=3 2> /dev/null)"
 
     local API
     case "$DEX_VERSION" in
-        "35")
+        "035")
             API="23"
             ;;
-        "37")
+        "037")
             API="25"
             ;;
-        "38")
+        "038")
             API="27"
             ;;
-        "39")
+        "039")
             API="29"
             ;;
-        "40")
+        "040")
             API="34"
             ;;
-        "41")
+        "041")
             API="35"
             ;;
         *)
