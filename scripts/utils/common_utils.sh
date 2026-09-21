@@ -472,10 +472,15 @@ EVAL()
 
     local CMD="$1"
 
+    # `OUT="$(...)"` is an assignment: under `set -e` it aborts the whole build
+    # on a non-zero exit, before the error below can be printed. Capturing the
+    # status with `|| RC=$?` keeps the assignment a simple command whose failure
+    # this function can report.
+    local RC=0
     local OUT
-    OUT="$(eval "$CMD" 2>&1)"
-    # shellcheck disable=SC2181,SC2291
-    if [ $? -ne 0 ]; then
+    OUT="$(eval "$CMD" 2>&1)" || RC=$?
+
+    if [ "$RC" -ne 0 ]; then
         LOGE "Command returned a non-zero exit code\n"
         echo -e    '\033[0;31m'"$CMD"'\033[0m\n' >&2
         echo -n -e '\033[0;33m' >&2
