@@ -30,6 +30,7 @@ if [[ "$SOURCE_PRODUCT_SHIPPING_API_LEVEL" != "$TARGET_PRODUCT_SHIPPING_API_LEVE
     system/framework/services.jar/smali_classes2/com/android/server/sepunion/EngmodeService\$EngmodeTimeThread.smali
     "
     for f in $FTP; do
+        [ -f "$APKTOOL_DIR/$f" ] || { LOGW "Not found in decoded tree: $f"; continue; }
         sed -i \
             "s/\"MAINLINE_API_LEVEL: $SOURCE_PRODUCT_SHIPPING_API_LEVEL\"/\"MAINLINE_API_LEVEL: $TARGET_PRODUCT_SHIPPING_API_LEVEL\"/g" \
             "$APKTOOL_DIR/$f"
@@ -51,6 +52,7 @@ if [[ "$SOURCE_LCD_CONFIG_CONTROL_AUTO_BRIGHTNESS" != "$TARGET_LCD_CONFIG_CONTRO
     system/priv-app/SecSettings/SecSettings.apk/smali_classes4/com/samsung/android/settings/Rune.smali
     "
     for f in $FTP; do
+        [ -f "$APKTOOL_DIR/$f" ] || { LOGW "Not found in decoded tree: $f"; continue; }
         sed -i "s/\"$SOURCE_LCD_CONFIG_CONTROL_AUTO_BRIGHTNESS\"/\"$TARGET_LCD_CONFIG_CONTROL_AUTO_BRIGHTNESS\"/g" "$APKTOOL_DIR/$f"
     done
 
@@ -73,13 +75,13 @@ if [[ "$SOURCE_FINGERPRINT_CONFIG_SENSOR" != "$TARGET_FINGERPRINT_CONFIG_SENSOR"
     FTP="
     system/framework/framework.jar/smali_classes2/android/hardware/fingerprint/FingerprintManager.smali
     system/framework/framework.jar/smali_classes2/android/hardware/fingerprint/HidlFingerprintSensorConfig.smali
-    system/framework/framework.jar/smali_classes5/com/samsung/android/bio/fingerprint/SemFingerprintManager.smali
-    system/framework/framework.jar/smali_classes5/com/samsung/android/bio/fingerprint/SemFingerprintManager\$Characteristics.smali
+    system/framework/framework.jar/smali_classes6/com/samsung/android/bio/fingerprint/SemFingerprintManager.smali
+    system/framework/framework.jar/smali_classes6/com/samsung/android/bio/fingerprint/SemFingerprintManager\$Characteristics.smali
     system/framework/framework.jar/smali_classes6/com/samsung/android/rune/InputRune.smali
-    system/priv-app/SecSettings/SecSettings.apk/smali_classes4/com/samsung/android/settings/biometrics/fingerprint/FingerprintEntry.smali
-    system/priv-app/SecSettings/SecSettings.apk/smali_classes4/com/samsung/android/settings/biometrics/fingerprint/FingerprintLockSettings.smali
+    system/priv-app/SecSettings/SecSettings.apk/smali_classes5/com/samsung/android/settings/biometrics/fingerprint/FingerprintSettingsUtils.smali
     "
     for f in $FTP; do
+        [ -f "$APKTOOL_DIR/$f" ] || { LOGW "Not found in decoded tree: $f"; continue; }
         sed -i "s/$SOURCE_FINGERPRINT_CONFIG_SENSOR/$TARGET_FINGERPRINT_CONFIG_SENSOR/g" "$APKTOOL_DIR/$f"
     done
 
@@ -175,6 +177,7 @@ if [[ "$SOURCE_COMMON_CONFIG_MDNIE_MODE" != "$TARGET_COMMON_CONFIG_MDNIE_MODE" ]
     system/framework/services.jar/smali_classes2/com/samsung/android/hardware/display/SemMdnieManagerService.smali
     "
     for f in $FTP; do
+        [ -f "$APKTOOL_DIR/$f" ] || { LOGW "Not found in decoded tree: $f"; continue; }
         sed -i "s/\"$SOURCE_COMMON_CONFIG_MDNIE_MODE\"/\"$TARGET_COMMON_CONFIG_MDNIE_MODE\"/g" "$APKTOOL_DIR/$f"
     done
     LOG_STEP_OUT
@@ -190,6 +193,7 @@ else
     system/framework/framework.jar/smali_classes6/com/samsung/android/hardware/display/RefreshRateConfig.smali
     "
     for f in $FTP; do
+        [ -f "$APKTOOL_DIR/$f" ] || { LOGW "Not found in decoded tree: $f"; continue; }
         sed -i "s/\"$SOURCE_LCD_CONFIG_SEAMLESS_BRT\"/\"$TARGET_LCD_CONFIG_SEAMLESS_BRT\"/g" "$APKTOOL_DIR/$f"
         sed -i "s/\"$SOURCE_LCD_CONFIG_SEAMLESS_LUX\"/\"$TARGET_LCD_CONFIG_SEAMLESS_LUX\"/g" "$APKTOOL_DIR/$f"
     done
@@ -209,13 +213,14 @@ if [[ "$SOURCE_LCD_CONFIG_HFR_MODE" != "$TARGET_LCD_CONFIG_HFR_MODE" ]]; then
     system/framework/framework.jar/smali_classes6/com/samsung/android/hardware/display/RefreshRateConfig.smali
     system/framework/gamemanager.jar/smali/com/samsung/android/game/GameManagerService.smali
     system/framework/secinputdev-service.jar/smali/com/samsung/android/hardware/secinputdev/SemInputDeviceManagerService.smali
-    system/framework/secinputdev-service.jar/smali/com/samsung/android/hardware/secinputdev/SemInputFeatures.smali
-    system/framework/secinputdev-service.jar/smali/com/samsung/android/hardware/secinputdev/SemInputFeaturesExtra.smali
-    system/priv-app/SecSettings/SecSettings.apk/smali_classes4/com/samsung/android/settings/display/SecDisplayUtils.smali
+    system/framework/secinputdev-service.jar/smali/com/samsung/android/hardware/secinputdev/utils/SemInputFeatures.smali
+    system/framework/secinputdev-service.jar/smali/com/samsung/android/hardware/secinputdev/utils/SemInputFeaturesExtra.smali
+    system/priv-app/SecSettings/SecSettings.apk/smali_classes5/com/samsung/android/settings/display/SecDisplayUtils.smali
     system/priv-app/SettingsProvider/SettingsProvider.apk/smali/com/android/providers/settings/DatabaseHelper.smali
     system_ext/priv-app/SystemUI/SystemUI.apk/smali/com/android/systemui/LsRune.smali
     "
     for f in $FTP; do
+        [ -f "$APKTOOL_DIR/$f" ] || { LOGW "Not found in decoded tree: $f"; continue; }
         sed -i "s/\"$SOURCE_LCD_CONFIG_HFR_MODE\"/\"$TARGET_LCD_CONFIG_HFR_MODE\"/g" "$APKTOOL_DIR/$f"
     done
 
@@ -236,9 +241,10 @@ if [[ "$SOURCE_LCD_CONFIG_HFR_SUPPORTED_REFRESH_RATE" != "$TARGET_LCD_CONFIG_HFR
 
     FTP="
     system/framework/framework.jar/smali_classes6/com/samsung/android/hardware/display/RefreshRateConfig.smali
-    system/priv-app/SecSettings/SecSettings.apk/smali_classes4/com/samsung/android/settings/display/SecDisplayUtils.smali
+    system/priv-app/SecSettings/SecSettings.apk/smali_classes5/com/samsung/android/settings/display/SecDisplayUtils.smali
     "
     for f in $FTP; do
+        [ -f "$APKTOOL_DIR/$f" ] || { LOGW "Not found in decoded tree: $f"; continue; }
         if [[ "$TARGET_LCD_CONFIG_HFR_SUPPORTED_REFRESH_RATE" != "none" ]]; then
             sed -i "s/\"$SOURCE_LCD_CONFIG_HFR_SUPPORTED_REFRESH_RATE\"/\"$TARGET_LCD_CONFIG_HFR_SUPPORTED_REFRESH_RATE\"/g" "$APKTOOL_DIR/$f"
         else
@@ -256,10 +262,11 @@ if [[ "$SOURCE_LCD_CONFIG_HFR_DEFAULT_REFRESH_RATE" != "$TARGET_LCD_CONFIG_HFR_D
 
     FTP="
     system/framework/framework.jar/smali_classes6/com/samsung/android/hardware/display/RefreshRateConfig.smali
-    system/priv-app/SecSettings/SecSettings.apk/smali_classes4/com/samsung/android/settings/display/SecDisplayUtils.smali
+    system/priv-app/SecSettings/SecSettings.apk/smali_classes5/com/samsung/android/settings/display/SecDisplayUtils.smali
     system/priv-app/SettingsProvider/SettingsProvider.apk/smali/com/android/providers/settings/DatabaseHelper.smali
     "
     for f in $FTP; do
+        [ -f "$APKTOOL_DIR/$f" ] || { LOGW "Not found in decoded tree: $f"; continue; }
         sed -i "s/\"$SOURCE_LCD_CONFIG_HFR_DEFAULT_REFRESH_RATE\"/\"$TARGET_LCD_CONFIG_HFR_DEFAULT_REFRESH_RATE\"/g" "$APKTOOL_DIR/$f"
     done
     LOG_STEP_OUT
@@ -283,6 +290,7 @@ if [[ "$SOURCE_DVFSAPP_CONFIG_DVFS_POLICY_FILENAME" != "$TARGET_DVFSAPP_CONFIG_D
     system/priv-app/SamsungDeviceHealthManagerService/SamsungDeviceHealthManagerService.apk/smali/x1/e.smali
     "
     for f in $FTP; do
+        [ -f "$APKTOOL_DIR/$f" ] || { LOGW "Not found in decoded tree: $f"; continue; }
         sed -i "s/$SOURCE_DVFSAPP_CONFIG_DVFS_POLICY_FILENAME/$TARGET_DVFSAPP_CONFIG_DVFS_POLICY_FILENAME/g" "$APKTOOL_DIR/$f"
     done
     LOG_STEP_OUT
@@ -299,6 +307,7 @@ if [[ "$SOURCE_DVFSAPP_CONFIG_SSRM_POLICY_FILENAME" != "$TARGET_DVFSAPP_CONFIG_S
     system/priv-app/SamsungDeviceHealthManagerService/SamsungDeviceHealthManagerService.apk/smali/S1/v.smali
     "
     for f in $FTP; do
+        [ -f "$APKTOOL_DIR/$f" ] || { LOGW "Not found in decoded tree: $f"; continue; }
         sed -i "s/\"$SOURCE_DVFSAPP_CONFIG_SSRM_POLICY_FILENAME\"/\"$SOURCE_DVFSAPP_CONFIG_SSRM_POLICY_FILENAME\"/g" "$APKTOOL_DIR/$f"
     done
     LOG_STEP_OUT
@@ -332,7 +341,7 @@ if $SOURCE_SUPPORT_WIFI_7; then
     if ! $TARGET_SUPPORT_WIFI_7; then
         LOG_STEP_IN "- Applying Wi-Fi 7 patches"
         APPLY_PATCH "system" "system/framework/semwifi-service.jar" "$SRC_DIR/unica/patches/product_feature/wifi/semwifi-service.jar/0001-Disable-Wi-Fi-7-support.patch"
-        APPLY_PATCH "system" "system/priv-app/SecSettings/SecSettings.apk" "$SRC_DIR/unica/patches/product_feature/wifi/SecSettings.apk/0001-Disable-Wi-Fi-7-support.patch"
+        # One UI 8.5: SemWifiUtils.isSupportedWifi7() no longer exists in SecSettings; Wi-Fi 7 disabling is fully handled by semwifi-service.jar patch above
         LOG_STEP_OUT
     fi
 fi
