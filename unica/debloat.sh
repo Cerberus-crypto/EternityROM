@@ -102,9 +102,15 @@ system/preload/Facebook_stub_preload
 system/priv-app/AREmoji
 system/priv-app/AREmojiEditor
 system/priv-app/AuthFramework
+system/priv-app/AppUpdateCenter
 system/priv-app/BCService
-system/priv-app/DiagMonAgent94
+system/priv-app/CIDManager
+system/priv-app/CpAgent
+system/priv-app/Crane
+system/priv-app/DiagMonAgent97
 system/priv-app/DigitalKey
+system/priv-app/DeviceQualityAgent37
+system/priv-app/EuiccGoogle
 system/priv-app/FBInstaller_NS
 system/priv-app/FBServices
 system/priv-app/FotaAgent
@@ -115,7 +121,9 @@ system/priv-app/SamsungBilling
 system/priv-app/SamsungCarKeyFw
 system/priv-app/SamsungMessages
 system/priv-app/SamsungPass
-system/priv-app/SOAgent75
+system/priv-app/SamsungPositioning
+system/priv-app/SKMSAgent
+system/priv-app/SOAgent77
 system/priv-app/SPPPushClient
 system/priv-app/StickerFaceARAvatar
 "
