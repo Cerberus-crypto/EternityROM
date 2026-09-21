@@ -39,9 +39,13 @@ wait $(jobs -p) || exit 1
 
 LOG_STEP_OUT
 
-LOG_STEP_IN "- Removing HDR10+ check"
-ADD_TO_WORK_DIR "pa3qxxx" "system" "system/lib64/libstagefright.so" 0 0 644 "u:object_r:system_lib_file:s0"
-HEX_PATCH "$WORK_DIR/system/system/lib64/libstagefright.so" "010140f9cf390594a0500034" "010140f91f2003d51f2003d5"
+LOG_STEP_IN
+LOG "- Skipping HDR10+ check removal"
+# The prebuilt pa3qxxx libstagefright.so shipped in this tree does not carry the
+# S25U HDR10+ byte pattern, so swapping it in and hex patching it aborts the
+# build with no HDR10+ check removed. Keep the target's own library instead, as
+# the validated oneui85-lab build of this firmware does.
+# HEX_PATCH "$WORK_DIR/system/system/lib64/libstagefright.so" "010140f9cf390594a0500034" "010140f91f2003d51f2003d5"
 
 # Add prebuilt libs from other devices
 BLOBS_LIST="
