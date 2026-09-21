@@ -8,10 +8,10 @@ Signed-off-by: ExtremeXT <75576145+ExtremeXT@users.noreply.github.com>
  .../usefulfeature/applock/AppLockPreferenceController.smali   | 4 ----
  1 file changed, 4 deletions(-)
 
-diff --git a/smali_classes3/com/samsung/android/settings/usefulfeature/applock/AppLockPreferenceController.smali b/smali_classes3/com/samsung/android/settings/usefulfeature/applock/AppLockPreferenceController.smali
+diff --git a/smali_classes2/com/samsung/android/settings/usefulfeature/applock/AppLockPreferenceController.smali b/smali_classes2/com/samsung/android/settings/usefulfeature/applock/AppLockPreferenceController.smali
 index fabab015..d69d23ba 100644
---- a/smali_classes3/com/samsung/android/settings/usefulfeature/applock/AppLockPreferenceController.smali
-+++ b/smali_classes3/com/samsung/android/settings/usefulfeature/applock/AppLockPreferenceController.smali
+--- a/smali_classes2/com/samsung/android/settings/usefulfeature/applock/AppLockPreferenceController.smali
++++ b/smali_classes2/com/samsung/android/settings/usefulfeature/applock/AppLockPreferenceController.smali
 @@ -123,10 +123,6 @@
  
      sget-object p0, Lcom/android/settings/Utils;->sBuilder:Ljava/lang/StringBuilder;
