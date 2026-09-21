@@ -4,14 +4,14 @@ Date: Sun, 27 Apr 2025 20:22:50 +0300
 Subject: [PATCH] Disable Wi-Fi 7 support
 
 ---
- .../driver/WifiDriverFeatureProvider.smali    | 21 +------------------
- 1 file changed, 1 insertion(+), 20 deletions(-)
+ .../wifi/driver/WifiDriverFeatureProvider.smali      | 20 +-------------------
+ 1 file changed, 1 insertion(+), 19 deletions(-)
 
 diff --git a/smali/com/samsung/android/server/wifi/driver/WifiDriverFeatureProvider.smali b/smali/com/samsung/android/server/wifi/driver/WifiDriverFeatureProvider.smali
-index 2eafc5a3..5e09925e 100644
+index dfe5e94..ae27b7d 100644
 --- a/smali/com/samsung/android/server/wifi/driver/WifiDriverFeatureProvider.smali
 +++ b/smali/com/samsung/android/server/wifi/driver/WifiDriverFeatureProvider.smali
-@@ -1358,29 +1358,10 @@
+@@ -1168,26 +1168,8 @@
  .end method
  
  .method public isWifi7Supported()Z
@@ -21,7 +21,7 @@ index 2eafc5a3..5e09925e 100644
 -
 -    if-eqz v0, :cond_0
 -
--    invoke-direct {p0}, Lcom/samsung/android/server/wifi/driver/WifiDriverFeatureProvider;->throwIfNotReady()V
+-    invoke-virtual {p0}, Lcom/samsung/android/server/wifi/driver/WifiDriverFeatureProvider;->throwIfNotReady()V
 -
 -    :cond_0
 -    iget p0, p0, Lcom/samsung/android/server/wifi/driver/WifiDriverFeatureProvider;->mWifiStandard:I
@@ -33,15 +33,11 @@ index 2eafc5a3..5e09925e 100644
 -
 -    const/4 p0, 0x1
 -
--    goto :goto_0
+-    return p0
 -
 -    :cond_1
      const/4 p0, 0x0
  
--    :goto_0
      return p0
- .end method
- 
--- 
+--
 2.45.2
-
