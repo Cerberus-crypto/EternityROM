@@ -12,19 +12,14 @@ diff --git a/smali/com/android/server/SystemServer.smali b/smali/com/android/ser
 index ceb225f8f8..cb212b7cc6 100644
 --- a/smali/com/android/server/SystemServer.smali
 +++ b/smali/com/android/server/SystemServer.smali
-@@ -9968,11 +9968,7 @@
+@@ -10094,9 +10094,7 @@
  
-     invoke-virtual/range {p1 .. p1}, Landroid/util/TimingsTraceLog;->traceEnd()V
+     invoke-static {}, Landroid/os/FactoryTest;->isFactoryBinary()Z
  
--    invoke-static {}, Landroid/os/FactoryTest;->isFactoryBinary()Z
+-    move-result v0
 -
--    move-result v3
--
--    if-nez v3, :cond_3c
-+    goto :cond_3c
+-    if-nez v0, :cond_3a
++    goto :cond_3a
  
-     const-string v3, "StartKnoxGuard"
+     const-string/jumbo v0, "StartKnoxGuard"
  
--- 
-2.43.0
-
