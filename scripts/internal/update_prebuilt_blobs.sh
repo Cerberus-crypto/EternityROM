@@ -23,7 +23,9 @@ set -Ee
 # [
 GET_LATEST_FIRMWARE()
 {
-    curl -s --retry 5 --retry-delay 5 "https://fota-cloud-dn.ospserver.net/firmware/$REGION/$MODEL/version.xml" \
+    # Samsung's FOTA endpoint returns 403 without a Samsung client User-Agent.
+    curl -s --retry 5 --retry-delay 5 -A "samsung $MODEL SyncML DM Client" \
+        "https://fota-cloud-dn.ospserver.net/firmware/$REGION/$MODEL/version.xml" \
         | grep latest | sed 's/^[^>]*>//' | sed 's/<.*//'
 }
 #]
