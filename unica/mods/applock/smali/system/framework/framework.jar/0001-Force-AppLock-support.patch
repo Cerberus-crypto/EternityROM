@@ -9,18 +9,14 @@ Signed-off-by: ExtremeXT <75576145+ExtremeXT@users.noreply.github.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/smali_classes6/com/samsung/android/rune/CoreRune.smali b/smali_classes6/com/samsung/android/rune/CoreRune.smali
-index 72e0151d..1f88e751 100644
 --- a/smali_classes6/com/samsung/android/rune/CoreRune.smali
 +++ b/smali_classes6/com/samsung/android/rune/CoreRune.smali
-@@ -3375,6 +3375,8 @@
+@@ -3514,6 +3514,8 @@
  
-     move-result v1
+     move-result v2
  
-+    const/4 v1, 0x1
++    const/4 v2, 0x1
 +
-     sput-boolean v1, Lcom/samsung/android/rune/CoreRune;->FW_SUPPORT_APPLOCK:Z
+     sput-boolean v2, Lcom/samsung/android/rune/CoreRune;->FW_SUPPORT_APPLOCK:Z
  
-     sget-boolean v1, Lcom/samsung/android/rune/CoreRune;->FW_SUPPORT_APPLOCK:Z
--- 
-2.45.2
-
+     sput-boolean v2, Lcom/samsung/android/rune/CoreRune;->FW_APPLOCK:Z
