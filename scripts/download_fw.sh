@@ -30,6 +30,11 @@ SERIAL_NO=""
 LATEST_FIRMWARE=""
 ZIP_FILE=""
 
+# samloader-rs is installed by the GitHub Actions build workflow.
+# Use an explicit path so the legacy Python samloader from the virtualenv
+# can never be selected accidentally.
+SAMLOADER_RS="$OUT_DIR/tools/samloader-rs/samloader"
+
 PREPARE_SCRIPT()
 {
     local EXTRA_FIRMWARES=()
@@ -124,6 +129,14 @@ VERIFY_ODIN_PACKAGES()
 
 PREPARE_SCRIPT "$@"
 
+if [ ! -x "$SAMLOADER_RS" ]; then
+    LOGE "samloader-rs was not found or is not executable: $SAMLOADER_RS"
+    exit 1
+fi
+
+SAMLOADER_VERSION="$("$SAMLOADER_RS" --version 2>&1)"
+LOG "- Using samloader-rs: $SAMLOADER_VERSION"
+
 for i in "${FIRMWARES[@]}"; do
     PARSE_FIRMWARE_STRING "$i" || exit 1
 
@@ -167,23 +180,37 @@ for i in "${FIRMWARES[@]}"; do
     mkdir -p "$ODIN_DIR/${MODEL}_${CSC}"
 
     COUNT=1
-    # Loop infinetely until download succeeds
-    while true; do
-        # shellcheck disable=SC2164
-        # Anan's samloader stores its logs in the current working directory, let's move into OUT_DIR just for this time
-        (
-        cd "$OUT_DIR"
-        samloader -m "$MODEL" -r "$CSC" -i "$IMEI" -s "$SERIAL_NO" download -O "$ODIN_DIR/${MODEL}_${CSC}" 1> /dev/null || exit 1
-        )
 
-        ZIP_FILE="$(find "$ODIN_DIR/${MODEL}_${CSC}" -name "*.zip" | sort -r | head -n 1)"
-        if [ ! "$ZIP_FILE" ] || [ ! -f "$ZIP_FILE" ]; then
-            if [ $COUNT -gt 10 ]; then
-                LOGW "\033[0;31m! Download failed, check your network connection or device IMEI!\033[0m"
+    # Retry until the firmware download succeeds.
+    while true; do
+        if "$SAMLOADER_RS" download \
+            -m "$MODEL" \
+            -r "$CSC" \
+            -v "$LATEST_FIRMWARE" \
+            -j 8 \
+            -d "$ODIN_DIR/${MODEL}_${CSC}"; then
+            :
+        else
+            if [ "$COUNT" -gt 10 ]; then
+                LOGW "\033[0;31m! Download failed after 10 attempts, check your network connection or Samsung FUS availability!\033[0m"
                 exit 1
             fi
 
             LOGW "\033[0;31m! [Attempt: $COUNT] Download failed, retrying in 5 seconds...\033[0m"
+            sleep 5
+            ((COUNT++))
+            continue
+        fi
+
+        ZIP_FILE="$(find "$ODIN_DIR/${MODEL}_${CSC}" -type f -name "*.zip" | sort -r | head -n 1)"
+
+        if [ ! "$ZIP_FILE" ] || [ ! -f "$ZIP_FILE" ]; then
+            if [ "$COUNT" -gt 10 ]; then
+                LOGW "\033[0;31m! Download completed without producing a firmware ZIP!\033[0m"
+                exit 1
+            fi
+
+            LOGW "\033[0;31m! [Attempt: $COUNT] Firmware ZIP was not found, retrying in 5 seconds...\033[0m"
             sleep 5
             ((COUNT++))
         else
