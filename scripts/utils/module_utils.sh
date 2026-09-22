@@ -16,7 +16,7 @@
 #
 
 # [
-source "$SRC_DIR/scripts/utils/common_utils.sh"
+source "$SRC_DIR/scripts/utils/smali_utils.sh"
 
 _GET_PROP_LOCATION()
 {
@@ -80,7 +80,7 @@ APPLY_PATCH()
     DECODE_APK "$PARTITION" "$FILE" || return 1
 
     LOG "- Applying \"$(grep "^Subject:" "$PATCH" | sed "s/.*PATCH] //; s/.*PATCH .\/.] //")\" to /$PARTITION/$FILE"
-    EVAL "cd \"$APKTOOL_DIR/$PARTITION/${FILE//system\//}\"; patch -p1 -s -t -N --no-backup-if-mismatch < \"$PATCH\"; cd - &> /dev/null"
+    EVAL "LC_ALL=C git apply --directory=\"$APKTOOL_DIR/$PARTITION/${FILE//system\//}\" --verbose --unsafe-paths \"$PATCH\"" || return 1
 }
 
 # DECODE_APK <partition> <apk/jar>
@@ -281,7 +281,7 @@ SET_PROP()
                 FILE="$WORK_DIR/system/system/build.prop"
                 ;;
             "system_ext")
-                if $TARGET_OS_BUILD_SYSTEM_EXT_PARTITION; then
+                if $TARGET_HAS_SYSTEM_EXT; then
                     FILE="$WORK_DIR/system_ext/etc/build.prop"
                 else
                     FILE="$WORK_DIR/system/system/system_ext/etc/build.prop"
